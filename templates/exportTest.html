@@ -1,0 +1,148 @@
+<!-- ここでは、
+     動画の周期的な録画と保存の実装と、
+     JavaScriptからBlob形式でファイルをPythonに渡す動作確認を行った。
+     (2023-12-12) -->
+
+    <!DOCTYPE html>
+    <html lang="ja">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>export test / Cam Test</title>
+    
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+        <!-- FontAwesome -->
+        <script src="https://kit.fontawesome.com/6f8d6b3f84.js" crossorigin="anonymous"></script>
+    
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Noto+Sans+JP:wght@100;200;300;400;500;600;700;800;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+            rel="stylesheet">
+    
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+        <!-- CSS -->
+        <link rel="stylesheet" href="../static/css/anime.css">
+        <link rel="stylesheet" href="../static/css/font.css">
+        <link rel="stylesheet" href="../static/css/style.css">
+    
+        <!-- JS -->
+        <script type="module" src="../static/js/exportTest.js"></script>
+    
+    </head>
+    
+    <body>
+    
+        <!-- ヘッダー -->
+        <div class="py-3 br-b-30 shadow" style="background-color: rgb(255, 253, 249);">
+            <div class="row">
+                <div class="col-1">
+                    <div class="px-5 pt-2" style="font-size: 35px;">
+                        <i type="button" class="fa-solid fa-bars be-big-lg" style="color: rgb(247, 150, 91);"  data-bs-toggle="offcanvas" data-bs-target="#navCanvas" aria-controls="navCanvas"></i>
+                    </div>
+                </div>
+                <div class="col-10">
+                    <div class="text-center">
+                        <h1 class="f-Zen-Kaku-Gothic-New fw-exbold" style="color: rgb(247, 150, 91); font-size: 35px;">
+                            カメラ機能テスト
+                        </h1>
+                        <h3 class="f-Noto-Sans-Japanese fw-medium" style="color: rgb(240, 178, 139); font-size: 15px;">
+                            ～録画した動画Pythonに渡すテスト～
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-1">
+    
+                </div>
+            </div>
+            
+        </div>
+    
+        <!-- 本文 -->
+        <div class="container">
+
+            <div class="mt-5">
+                <div class="f-Zen-Maru-Gothic text-center text-secondary">
+                    「はじめる」を押すとwebカメラが起動し、10秒間映像を録画します。
+                    <br>その後、録画された映像はPythonに渡され、上手く実行されると「成功！」と表示されます
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="d-grid col-10 mx-auto">
+                    <div class="bg-success-subtle br-20 py-2">
+                        <div id="messageArea" class="f-Zen-Kaku-Gothic-New fw-bold fs-3 text-center text-success">
+                            
+                        </div>
+                        <div class="my-2" style="border-bottom: 2px solid rgb(255, 255, 255);"></div>
+                        <div id="subMessageArea" class="f-Zen-Maru-Gothic fw-bold text-center text-secondary">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="mt-5">
+                <div class="d-grid col-5 mx-auto">
+                    <button onclick="vStart()" class="btn btn-outline-primary br-20" type="button">
+                        <div class="f-Zen-Kaku-Gothic-New fw-bold">
+                            はじめる
+                        </div>
+                    </button>
+                </div>
+            </div>
+            
+    
+        </div>
+    
+        <!-- フッター -->
+        <div class="mt-5 py-5">
+            <div class="text-center">
+                <small class="text-secondary f-Zen-Maru-Gothic">
+                    © たと ・ プロジェクト課題チーム7 ・ 2023
+                </small>
+            </div>
+        </div>
+    
+    
+        <!-- オフキャンバス -->
+        <div class="offcanvas offcanvas-start br-r-20" tabindex="-1" id="navCanvas" aria-labelledby="navCanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="navCanvasLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+    
+                <div class="mt-5 text-center f-Zen-Kaku-Gothic-New fw-exbold fs-4">
+                    <div class="row justify-content-center row-cols-auto">
+                        <a href="./index.html" type="button" class="col px-3 br-20 be-big-lg non-a text-secondary">
+                            トップ
+                        </a>
+                    </div>
+                    <div class="mt-3 row justify-content-center row-cols-auto">
+                        <div type="button" class="col px-3 text-white br-20 be-big-click" style="background-color: rgb(247, 150, 91);">
+                            保存先テスト
+                        </div>
+                    </div>
+                </div>
+                
+    
+    
+            </div>
+        </div>
+    
+    
+    </body>
+    
+    </html>

@@ -1,0 +1,172 @@
+<!-- ここでは、
+     HTMLおよびJavaScriptによるWebカメラの起動と、
+     カメラ映像のストリーミング、およびその映像の録画・再生・保存について、 
+     基本的なコードの書き方と、それに伴う実験を行った 
+     (2023-11-29) -->
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOP / Cam Test</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/6f8d6b3f84.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Noto+Sans+JP:wght@100;200;300;400;500;600;700;800;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../static/css/anime.css">
+    <link rel="stylesheet" href="../static/css/font.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- JS -->
+    <script type="module" src="../static/js/index.js"></script>
+
+</head>
+
+<body>
+
+    <!-- ヘッダー -->
+    <div class="py-3 br-b-30 shadow" style="background-color: rgb(255, 253, 249);">
+        <div class="row">
+            <div class="col-1">
+                <div class="px-5 pt-2" style="font-size: 35px;">
+                    <i type="button" class="fa-solid fa-bars be-big-lg" style="color: rgb(247, 150, 91);"  data-bs-toggle="offcanvas" data-bs-target="#navCanvas" aria-controls="navCanvas"></i>
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="text-center">
+                    <h1 class="f-Zen-Kaku-Gothic-New fw-exbold" style="color: rgb(247, 150, 91); font-size: 35px;">
+                        カメラ機能テスト
+                    </h1>
+                    <h3 class="f-Noto-Sans-Japanese fw-medium" style="color: rgb(240, 178, 139); font-size: 15px;">
+                        ～JSからのWebカメラ呼び出しと動画の保存～
+                    </h3>
+                </div>
+            </div>
+            <div class="col-1">
+
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- 本文 -->
+    <div class="container">
+
+        <div class="mt-3">
+            <div class="row row-cols-auto justify-content-center">
+                <div class="col">
+                    <div class="text-center br-20 be-big-click px-3 text-white f-Zen-Maru-Gothic"
+                        style="background-color: rgb(147, 163, 147);">
+                        <div type="button" value="カメラ起動" onclick="cameraInitSmartphoneSupport()">
+                            カメラを起動する
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="text-center br-20 be-big-click px-3 text-white f-Zen-Maru-Gothic"
+                        style="background-color: rgb(147, 148, 163);">
+                        <div type="button" onclick="cameraRecordStart()">
+                            録画スタート
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="text-center br-20 be-big-click px-3 text-white f-Zen-Maru-Gothic"
+                        style="background-color: rgb(163, 147, 147);">
+                        <div type="button" onclick="cameraRecordStop()">
+                            録画ストップ
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="text-center br-20 be-big-click px-3 text-white f-Zen-Maru-Gothic"
+                        style="background-color: rgb(163, 160, 147);">
+                        <div type="button" onclick="videoDownload()">
+                            ダウンロード
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- カメラ映像をストリームする領域 -->
+        <div class="mt-3">
+            <div class="row justify-content-center">
+                <div class="col-10 text-center">
+                    <video class="br-20" id="camera" autoplay muted playsinline></video>
+                </div>
+            </div>
+        </div>
+
+        <!-- 録画した動画を再生する領域 -->
+        <div class="mt-3">
+            <div class="row justify-content-center">
+                <div class="col-10 text-center">
+                    <video controls playsinline id="videoRecorded" class="br-20"></video>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- フッター -->
+    <div class="mt-5 py-5">
+        <div class="text-center">
+            <small class="text-secondary f-Zen-Maru-Gothic">
+                © たと ・ プロジェクト課題チーム7 ・ 2023
+            </small>
+        </div>
+    </div>
+
+
+    <!-- オフキャンバス -->
+    <div class="offcanvas offcanvas-start br-r-20" tabindex="-1" id="navCanvas" aria-labelledby="navCanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="navCanvasLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+
+            <div class="mt-5 text-center f-Zen-Kaku-Gothic-New fw-exbold fs-4">
+                <div class="row justify-content-center row-cols-auto">
+                    <div type="button" class="col px-3 text-white br-20 be-big-click" style="background-color: rgb(247, 150, 91);">
+                        トップ
+                    </div>
+                </div>
+                <div class="mt-3 row justify-content-center row-cols-auto">
+                    <a href="./exportTest.html" type="button" class="col px-3 br-20 be-big-lg non-a text-secondary">
+                        保存先テスト
+                    </a>
+                </div>
+            </div>
+            
+
+
+        </div>
+      </div>
+
+
+</body>
+
+</html>
