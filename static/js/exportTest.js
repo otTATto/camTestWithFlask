@@ -33,8 +33,8 @@ async function vStart(){
     mediaRecorder.start();
     console.log('録画が開始されました');
 
-    // 1秒待機
-    await wait(1000);
+    // 11秒待機
+    await wait(11000);
 
     // 録画の停止
     mediaRecorder.stop();

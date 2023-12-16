@@ -1,11 +1,9 @@
 from flask import Flask, request, render_template
-import os
-import io
-import subprocess
 import cv2
 import numpy as np
 import tempfile     # 一時ファイルを一時ディレクトリに保存するためのライブラリ
 import demo         # カンニング検知の機械学習モデル（デモ）関数を呼び出す
+import detect       # カンニング検知の機械学習モデル（本物）関数を呼び出す
 
 app = Flask(__name__)
 
@@ -36,7 +34,8 @@ def upload_blob():
         cap = cv2.VideoCapture(temp_file_path)
 
         # 機械学習モデル（デモ）にVideoCaptureオブジェクトを渡す
-        output = demo.demo_detect(cap)
+        # output = demo.demo_detect(cap) # デモ
+        output = detect.detect(cap)
 
         print(output)
 
