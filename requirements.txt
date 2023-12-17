@@ -82,7 +82,6 @@ pyparsing==3.0.7
 pyperclip==1.8.2
 pyrsistent==0.18.1
 python-dateutil==2.8.2
-python-magic-bin
 pytz==2023.3.post1
 pywin32==303
 pywinpty==2.0.5
