@@ -33,4 +33,4 @@ def get_frame(input_cap):
     # ビデオファイルの長さ（秒）を取得
     video_length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) / frame_rate
     
-    return video_length
+    return frame_rate

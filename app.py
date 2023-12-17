@@ -41,7 +41,7 @@ def upload_blob():
         # output = detect.detect(cap)
 
         frame = demo.get_frame(cap)
-        print("[ GET ] a video length from VideoCapture Object is:")
+        print("[ GET ] a video frame rate from VideoCapture Object is:")
         print(frame)
 
         # 念のためVideoCaptureオブジェクトを解放
