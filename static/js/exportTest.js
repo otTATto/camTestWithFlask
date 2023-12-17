@@ -3,6 +3,9 @@ import { getMilliSecond } from './time.js';
 
 // 録画されたデータの格納
 var record_data = [];
+// HTMLオブジェクトの参照
+let messageArea = document.getElementById("messageArea");
+let subMessageArea = document.getElementById("subMessageArea");
 
 // カメラの設定
 const cameraSetting = {
@@ -33,12 +36,24 @@ async function vStart(){
     mediaRecorder.start();
     console.log('録画が開始されました');
 
+    // 表示
+    var message = "録画を開始しました";
+    var subMessage = "約10秒間の動画が撮影されます";
+    messageArea.innerHTML = message;
+    subMessageArea.innerHTML = subMessage;
+
     // 11秒待機
     await wait(11000);
 
     // 録画の停止
     mediaRecorder.stop();
     console.log('録画を停止しました');
+
+    message = "録画を停止しました";
+    subMessage = '機械学習モデルによるカンニング判定を行っています…<i class="fa-solid fa-robot fa-bounce"></i>';
+
+    messageArea.innerHTML = message;
+    subMessageArea.innerHTML = subMessage;
 
     // mediaRecorder.stop()の完了を待つ
     await new Promise(resolve => {
@@ -110,14 +125,12 @@ function responceToHtml(responceInput){
             subMessage = "試験監督者の指示に従ってください！";
             break;
         case '-1':
-            message = "エラーが起きました";
+            message = "カンニング判定ができませんでした";
             subMessage = "このまま試験を続行してください";
             break;
     }
 
     // 表示
-    let messageArea = document.getElementById("messageArea");
-    let subMessageArea = document.getElementById("subMessageArea");
     messageArea.innerHTML = message;
     subMessageArea.innerHTML = subMessage;
 
