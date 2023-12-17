@@ -7,6 +7,9 @@ import detect       # カンニング検知の機械学習モデル（本物）�
 
 app = Flask(__name__)
 
+# タイムアウトの設定（秒単位）
+app.config['TIMEOUT'] = 120  # 例: タイムアウトを120秒に設定
+
 @app.route("/")
 def index():
     return render_template('index.html')
