@@ -8,7 +8,7 @@ import detect       # カンニング検知の機械学習モデル（本物）�
 app = Flask(__name__)
 
 # タイムアウトの設定（秒単位）
-app.config['TIMEOUT'] = 120  # 例: タイムアウトを120秒に設定
+app.config['TIMEOUT'] = 180
 
 @app.route("/")
 def index():
@@ -37,10 +37,12 @@ def upload_blob():
         cap = cv2.VideoCapture(temp_file_path)
 
         # 機械学習モデル（デモ）にVideoCaptureオブジェクトを渡す
-        # output = demo.demo_detect(cap) # デモ
-        output = detect.detect(cap)
+        output = demo.demo_detect(cap) # デモ
+        # output = detect.detect(cap)
 
-        print(output)
+        frame = demo.get_frame(cap)
+        print("[ GET ] a frame from VideoCapture Object is:")
+        print(frame)
 
         # 念のためVideoCaptureオブジェクトを解放
         cap.release()
