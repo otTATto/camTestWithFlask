@@ -12,7 +12,7 @@ def detect(cap):
     import pandas as pd
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor("C:\\Users\\nrkk0\\AppData\\Local\\Temp\\ed24d793-bd24-42f1-8707-c57dad1541ff_shape_predictor_68_face_landmarks.dat.bz2.1ff\\shape_predictor_68_face_landmarks.dat")
+    predictor = dlib.shape_predictor("./static/src/dat/shape_predictor_68_face_landmarks.dat")
 
     def calculate_gaze_ratio(eye_points, facial_landmarks, frame):
  
