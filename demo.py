@@ -27,4 +27,10 @@ def get_frame(input_cap):
         print("Error: フレームの取得に失敗しました。")
         return None
     
-    return frame_count
+    # フレームレートを取得
+    frame_rate = int(cap.get(cv2.CAP_PROP_FPS))
+    
+    # ビデオファイルの長さ（秒）を取得
+    video_length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) / frame_rate
+    
+    return int(video_length)
