@@ -21,9 +21,10 @@ def get_frame(input_cap):
         return None
     
     ret, frame = cap.read()  # フレームを取得
+    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    # フレーム数の取得
 
     if not ret:
         print("Error: フレームの取得に失敗しました。")
         return None
     
-    return frame
+    return frame_count
